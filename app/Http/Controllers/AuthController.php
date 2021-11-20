@@ -81,7 +81,10 @@ class AuthController extends Controller
         return ResponseHelper::response(
             "Successfully logged in",
             200,
-            ['token' => $token]
+            [
+                'token' => $token,
+                'user' => $user
+            ]
         );
     }
 
