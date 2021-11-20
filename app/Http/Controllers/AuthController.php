@@ -40,6 +40,7 @@ class AuthController extends Controller
             'radius' => $request->radius,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
+            'balance' => 0
         ]);
 
         $user->save();
