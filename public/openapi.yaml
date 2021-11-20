@@ -1,0 +1,1265 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - url: https://caterify.xyz/
+info:
+  version: "1.0.0"
+  title: Caterify API Documentation
+  description: Sesuai namanya, ini docs buat API Caterify
+paths:
+  '/api/auth/register':
+    post:
+      tags:
+        - Authentication
+      description: Ya buat register lah apa lagi
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - api_key
+                - name
+                - email
+                - phone
+                - role
+                - password
+                - password_confirmation
+              properties:
+                api_key:
+                  type: string
+                  description: API key provided by Farrel Anshary
+                  example: asdasd
+                name:
+                  type: string
+                  description: Name of the user
+                  example: Farrel Najib Anshary
+                email:
+                  type: string
+                  description: User's email
+                  example: farrel.anshary@binus.ac.id
+                phone:
+                  type: number
+                  description: User's phone number
+                  example: 628112233
+                role:
+                  type: number
+                  description: Role of the user (1 for catering, 2 for user)
+                  example: 1
+                password:
+                  type: string
+                  description: User's password
+                  example: admin123
+                password_confirmation:
+                  type: string
+                  description: User's password confirmation
+                  example: admin123
+                address:
+                  type: string
+                  description: Address of the user
+                  example: Green Office Park 9
+                radius:
+                  type: number
+                  description: Radius of the delivery supported in meters (Required for catering role)
+                  example: 2000
+                latitude:
+                  type: number
+                  format: double
+                  description: Latitude of the catering location
+                  example: -6.302171
+                longitude:
+                  type: number
+                  format: double
+                  description: Longitude of the catering location
+                  example: 106.652326
+
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully register new user"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      token:
+                        type: string
+                        description: Token string used for authentication
+                        example: 2|Hvu54arWsoLzjciFOBvrASbYyanFKLB2B9R9tAQV
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: ID represents a unique identifier of the user
+                            example: 1
+                          name:
+                            type: string
+                            description: Name of the user
+                            example: Farrel Najib Anshary
+                          email:
+                            type: string
+                            description: User's email
+                            example: farrel.anshary@binus.ac.id
+                          phone:
+                            type: number
+                            description: User's phone number
+                            example: 628112233
+                          role:
+                            type: number
+                            description: Role of the user (1 for catering, 2 for user)
+                            example: 1
+                          address:
+                            type: string
+                            description: Address of the user
+                            example: Green Office Park 9
+                          radius:
+                            type: number
+                            description: Radius of the delivery supported in meters (Required for catering role)
+                            example: 2000
+                          latitude:
+                            type: number
+                            format: double
+                            description: Latitude of the catering location (Required for catering role)
+                            example: -6.302171
+                          longitude:
+                            type: number
+                            format: double
+                            description: Longitude of the catering location (Required for catering role)
+                            example: 106.652326
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+                    description: List of error fields
+                    properties:
+                      name:
+                        type: array
+                        description: List of errors in name field
+                        items:
+                          type: string
+                        example: [
+                          "The name field is required.",
+                        ]
+                      email:
+                        type: array
+                        description: List of errors in email field
+                        items:
+                          type: string
+                        example: [
+                          "The email field is required.",
+                          "The email must be a valid email address.",
+                          "The email has already been taken."
+                        ]
+                      phone:
+                        type: array
+                        description: List of errors in phone field
+                        items:
+                          type: string
+                        example: [
+                          "The phone field is required.",
+                          "The phone must be a number.",
+                          "The phone has already been taken."
+                        ]
+                      role:
+                        type: array
+                        description: List of errors in role field
+                        items:
+                          type: string
+                        example: [
+                          "The role field is required.",
+                        ]
+                      password:
+                        type: array
+                        description: List of errors in password field
+                        items:
+                          type: string
+                        example: [
+                          "The password field is required.",
+                          "The password confirmation does not match."
+                        ]
+                      address:
+                        type: array
+                        description: List of errors in address field
+                        items:
+                          type: string
+                        example: [
+                          "The address field is required when role is 1."
+                        ]
+                      radius:
+                        type: array
+                        description: List of errors in radius field
+                        items:
+                          type: string
+                        example: [
+                          "The radius must be a number.",
+                          "The radius field is required when role is 1."
+                        ]
+                      latitude:
+                        type: array
+                        description: List of errors in latitude field
+                        items:
+                          type: string
+                        example: [
+                          "The latitude field is required when role is 1."
+                        ]
+                      longitude:
+                        type: array
+                        description: List of errors in longitude field
+                        items:
+                          type: string
+                        example: [
+                          "The longitude field is required when role is 1."
+                        ]
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/auth/login':
+    post:
+      tags:
+        - Authentication
+      summary: Login
+      description: Ya buat login lah bro...
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - api_key
+                - email
+                - password
+              properties:
+                api_key:
+                  type: string
+                  description: API key provided by Farrel Anshary
+                  example: asdasd
+                email:
+                  type: string
+                  description: User's email
+                  example: farrel.anshary@binus.ac.id
+                password:
+                  type: string
+                  description: User's password
+                  example: admin123
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully logged in"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      token:
+                        type: string
+                        description: Token string used for authentication
+                        example: 2|Hvu54arWsoLzjciFOBvrASbYyanFKLB2B9R9tAQV
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+                    description: List of error fields
+                    properties:
+                      email:
+                        type: array
+                        description: List of errors in email field
+                        items:
+                          type: string
+                        example: [
+                          "The email field is required."
+                        ]
+                      password:
+                        type: array
+                        description: List of errors in password field
+                        items:
+                          type: string
+                        example: [
+                          "The password field is required."
+                        ]
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: Invalid email or password
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/auth/logout':
+    post:
+      tags:
+        - Authentication
+      summary: Logout
+      description: Gapaham lagi gw kalo lu gak ngerti logout buat apaan
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            format: bearer
+            example: Bearer 10|5Ua13XmskD3WS9MGFHy2IqMOqT6luSm09JBsSt3T
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - api_key
+              properties:
+                api_key:
+                  type: string
+                  description: API key provided by Farrel Anshary
+                  example: asdasd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully logged out"
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/public/caterings/':
+    get:
+      tags:
+        - Catering
+      description: Returns all caterings
+      summary: Get all caterings
+      parameters:
+        - name: api_key
+          in: query
+          description: API key provided by Farrel Anshary
+          required: true
+          schema:
+            type: string
+          example: asdasd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully get all caterings"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      caterings:
+                        type: array
+                        description: Single catering data
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: ID represents a unique identifier of the catering
+                              example: 11
+                            name:
+                              type: string
+                              description: Name of the catering
+                              example: "Joanda's Catering"
+                            email:
+                              type: string
+                              description: Email of the catering
+                              example: "joandacatering@gmail.com"
+                            phone:
+                              type: string
+                              description: Phone number of the catering
+                              example: "08112233"
+                            image:
+                              type: string
+                              description: Image of the catering (nullable)
+                              example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                            address:
+                              type: string
+                              description: Address of the catering
+                              example: "Green Office Park 9, BSD"
+                            radius:
+                              type: number
+                              format: double
+                              description: Radius of supported delivery by the catering
+                              example: 10000
+                            latitude:
+                              type: number
+                              format: double
+                              description: Latitude of the catering
+                              example: -6.269945
+                            longitude:
+                              type: number
+                              format: double
+                              description: Longitude of the catering
+                              example: 106.653181
+                            average_price:
+                              type: number
+                              format: double
+                              description: Distance of the catering from user
+                              example: 32090.9090
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/public/caterings/nearby':
+    get:
+      tags:
+        - Catering
+      description: Returns all caterings within range
+      summary: Get nearby caterings
+      parameters:
+        - name: api_key
+          in: query
+          description: API key provided by Farrel Anshary
+          required: true
+          schema:
+            type: string
+          example: asdasd
+        - name: latitude
+          in: query
+          description: Latitude of the user
+          schema:
+            type: number
+            format: double
+          example: -6.297265
+        - name: longitude
+          in: query
+          description: Longitude of the user
+          schema:
+            type: number
+            format: double
+          example: 106.641349
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully get nearby caterings"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      caterings:
+                        type: array
+                        description: Single catering data
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: ID represents a unique identifier of the catering
+                              example: 11
+                            name:
+                              type: string
+                              description: Name of the catering
+                              example: "Joanda's Catering"
+                            email:
+                              type: string
+                              description: Email of the catering
+                              example: "joandacatering@gmail.com"
+                            phone:
+                              type: string
+                              description: Phone number of the catering
+                              example: "08112233"
+                            image:
+                              type: string
+                              description: Image of the catering (nullable)
+                              example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                            address:
+                              type: string
+                              description: Address of the catering
+                              example: "Green Office Park 9, BSD"
+                            radius:
+                              type: number
+                              format: double
+                              description: Radius of supported delivery by the catering
+                              example: 10000
+                            latitude:
+                              type: number
+                              format: double
+                              description: Latitude of the catering
+                              example: -6.269945
+                            longitude:
+                              type: number
+                              format: double
+                              description: Longitude of the catering
+                              example: 106.653181
+                            distance:
+                              type: number
+                              format: double
+                              description: Distance of the catering from user
+                              example: 3307.374480692376
+                            average_price:
+                              type: number
+                              format: double
+                              description: Average price of the catering
+                              example: 32090.9090
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/public/caterings/featured':
+    get:
+      tags:
+        - Catering
+      description: Returns best caterings within range
+      summary: Get featured caterings
+      parameters:
+        - name: api_key
+          in: query
+          description: API key provided by Farrel Anshary
+          required: true
+          schema:
+            type: string
+          example: asdasd
+        - name: latitude
+          in: query
+          description: Latitude of the user
+          schema:
+            type: number
+            format: double
+          example: -6.297265
+        - name: longitude
+          in: query
+          description: Longitude of the user
+          schema:
+            type: number
+            format: double
+          example: 106.641349
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully get nearby caterings"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      caterings:
+                        type: array
+                        description: Single catering data
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: ID represents a unique identifier of the catering
+                              example: 11
+                            name:
+                              type: string
+                              description: Name of the catering
+                              example: "Joanda's Catering"
+                            email:
+                              type: string
+                              description: Email of the catering
+                              example: "joandacatering@gmail.com"
+                            phone:
+                              type: string
+                              description: Phone number of the catering
+                              example: "08112233"
+                            image:
+                              type: string
+                              description: Image of the catering (nullable)
+                              example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                            address:
+                              type: string
+                              description: Address of the catering
+                              example: "Green Office Park 9, BSD"
+                            radius:
+                              type: number
+                              format: double
+                              description: Radius of supported delivery by the catering
+                              example: 10000
+                            latitude:
+                              type: number
+                              format: double
+                              description: Latitude of the catering
+                              example: -6.269945
+                            longitude:
+                              type: number
+                              format: double
+                              description: Longitude of the catering
+                              example: 106.653181
+                            distance:
+                              type: number
+                              format: double
+                              description: Distance of the catering from user
+                              example: 3307.374480692376
+                            average_price:
+                              type: number
+                              format: double
+                              description: Average price of the catering
+                              example: 32090.9090
+                            average_rating:
+                              type: number
+                              format: double
+                              description: Average rating of the catering
+                              example: 32090.9090
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/public/schedules/catering/{cateringId}':
+    get:
+      tags:
+        - Schedule
+      description: Returns schedule of a catering in a day
+      summary: Get schedule of a catering
+      parameters:
+        - name: cateringId
+          in: path
+          required: true
+          description: Catering id acquired from caterings data
+          schema:
+            type: integer
+          example: 32
+        - name: api_key
+          in: query
+          description: API key provided by Farrel Anshary
+          required: true
+          schema:
+            type: string
+          example: asdasd
+        - name: date
+          in: query
+          description: Date of
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2021-10-31"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully get schedule of Joanda's Catering on 2021-11-20"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      schedule:
+                        type: object
+                        description: Single schedule data
+                        properties:
+                          id:
+                            type: integer
+                            description: ID represents a unique identifier of the schedule
+                            example: 11
+                          date:
+                            type: string
+                            format: date
+                            description: Date of the schedule
+                            example: "2021-11-20"
+                          price:
+                            type: number
+                            description: Price of meal on that day
+                            example: 29000
+                          menu:
+                            type: object
+                            description: Menu on that day
+                            properties:
+                              id:
+                                type: integer
+                                description: ID represents a unique identifier of the menu
+                                example: 11
+                              name:
+                                type: string
+                                description: Name of the menu
+                                example: "Paket Nasi Goreng A"
+                              image:
+                                type: string
+                                description: Image of the menu (nullable)
+                                example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                              description:
+                                type: string
+                                description: Description of the menu
+                                example: "Ini enak lho..."
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/public/schedules/catering/{cateringId}/range':
+    get:
+      tags:
+        - Schedule
+      description: Returns schedule of a catering in a range of date
+      summary: Get schedule of a catering within range
+      parameters:
+        - name: cateringId
+          in: path
+          required: true
+          description: Catering id acquired from caterings data
+          schema:
+            type: integer
+          example: 32
+        - name: api_key
+          in: query
+          description: API key provided by Farrel Anshary
+          required: true
+          schema:
+            type: string
+          example: asdasd
+        - name: start
+          in: query
+          description: Start date
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2021-11-19"
+        - name: end
+          in: query
+          description: End date
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2021-11-21"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully get schedule of Joanda's Catering on 2021-11-20"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      total:
+                        type: number
+                        description: Total schedules of that catering
+                        example: 2
+                      total_price:
+                        type: number
+                        description: Total price of that catering
+                        example: 100000
+                      schedule:
+                        type: array
+                        description: Single schedule data
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: ID represents a unique identifier of the schedule
+                              example: 11
+                            date:
+                              type: string
+                              format: date
+                              description: Date of the schedule
+                              example: "2021-11-20"
+                            price:
+                              type: number
+                              description: Price of meal on that day
+                              example: 29000
+                            menu:
+                              type: object
+                              description: Menu on that day
+                              properties:
+                                id:
+                                  type: integer
+                                  description: ID represents a unique identifier of the menu
+                                  example: 11
+                                name:
+                                  type: string
+                                  description: Name of the menu
+                                  example: "Paket Nasi Goreng A"
+                                image:
+                                  type: string
+                                  description: Image of the menu (nullable)
+                                  example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                                description:
+                                  type: string
+                                  description: Description of the menu
+                                  example: "Ini enak lho..."
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/private/orders/active':
+    get:
+      tags:
+        - Order
+      description: Returns all active orders from a catering in a day
+      summary: Get active orders
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            format: bearer
+            example: Bearer 105Ua13XmskD3WS9MGFHy2IqMOqT6luSm09JBsSt3T
+          required: true
+        - name: api_key
+          in: query
+          description: API key provided by Farrel Anshary
+          required: true
+          schema:
+            type: string
+          example: asdasd
+        - name: date
+          in: query
+          description: Date to query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2021-11-19"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully get all orders on 2021-11-19"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      total:
+                        type: number
+                        description: Total active orders
+                        example: 2
+                      orders:
+                        type: array
+                        items:
+                          type: object
+                          description: Single order data
+                          properties:
+                            id:
+                              type: integer
+                              description: ID represents a unique identifier of the order
+                              example: 11
+                            status:
+                              type: number
+                              description: Status of the order
+                              example: 2
+                            rating:
+                              type: number
+                              description: Rating of the order
+                              example: 4
+                            review:
+                              type: string
+                              description: Review of the order
+                              example: Enak sih, tapi gimana ya...
+                            schedule:
+                              type: object
+                              description: Single schedule data
+                              properties:
+                                id:
+                                  type: integer
+                                  description: ID represents a unique identifier of the schedule
+                                  example: 11
+                                date:
+                                  type: string
+                                  format: date
+                                  description: Date of the schedule
+                                  example: "2021-11-20"
+                                price:
+                                  type: number
+                                  description: Price of meal on that day
+                                  example: 29000
+                                menu:
+                                  type: object
+                                  description: Menu on that day
+                                  properties:
+                                    id:
+                                      type: integer
+                                      description: ID represents a unique identifier of the menu
+                                      example: 11
+                                    name:
+                                      type: string
+                                      description: Name of the menu
+                                      example: "Paket Nasi Goreng A"
+                                    image:
+                                      type: string
+                                      description: Image of the menu (nullable)
+                                      example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                                    description:
+                                      type: string
+                                      description: Description of the menu
+                                      example: "Ini enak lho..."
+                            user:
+                              type: object
+                              description: User data
+                              properties:
+                                id:
+                                  type: integer
+                                  description: ID represents a unique identifier of the user
+                                  example: 1
+                                name:
+                                  type: string
+                                  description: Name of the user
+                                  example: Farrel Najib Anshary
+                                email:
+                                  type: string
+                                  description: User's email
+                                  example: farrel.anshary@binus.ac.id
+                                phone:
+                                  type: number
+                                  description: User's phone number
+                                  example: 628112233
+                                role:
+                                  type: number
+                                  description: Role of the user (1 for catering, 2 for user)
+                                  example: 1
+                                address:
+                                  type: string
+                                  description: Address of the user
+                                  example: Green Office Park 9
+                                radius:
+                                  type: number
+                                  description: Radius of the delivery supported in meters (Required for catering role)
+                                  example: 2000
+                                latitude:
+                                  type: number
+                                  format: double
+                                  description: Latitude of the catering location (Required for catering role)
+                                  example: -6.302171
+                                longitude:
+                                  type: number
+                                  format: double
+                                  description: Longitude of the catering location (Required for catering role)
+                                  example: 106.652326
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/private/orders':
+    post:
+      tags:
+        - Order
+      description: Create new orders from date range
+      summary: Create new orders
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            format: bearer
+            example: Bearer 105Ua13XmskD3WS9MGFHy2IqMOqT6luSm09JBsSt3T
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - api_key
+                - start
+                - end
+                - catering_id
+              properties:
+                api_key:
+                  type: string
+                  description: API key provided by Farrel Anshary
+                  example: asdasd
+                start:
+                  type: string
+                  description: Start date of order
+                  format: date
+                  example: "2021-11-19"
+                end:
+                  type: string
+                  description: End date of order
+                  format: date
+                  example: "2021-11-21"
+                catering_id:
+                  type: number
+                  description: Which catering to subscibe
+                  example: 12
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully create orders"
+
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+                    description: List of error fields
+                    properties:
+                      start:
+                        type: array
+                        description: List of errors in start field
+                        items:
+                          type: string
+                        example: [
+                          "The start field is required."
+                        ]
+                      end:
+                        type: array
+                        description: List of errors in end field
+                        items:
+                          type: string
+                        example: [
+                          "The end field is required."
+                        ]
+                      catering_id:
+                        type: array
+                        description: List of errors in catering_id field
+                        items:
+                          type: string
+                        example: [
+                          "The catering_id field is required."
+                        ]
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+  '/api/private/menus':
+    post:
+      tags:
+        - Menu
+      summary: Create menu
+      description: Create a new menu
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            format: bearer
+            example: Bearer 10|5Ua13XmskD3WS9MGFHy2IqMOqT6luSm09JBsSt3T
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - api_key
+                - name
+                - description
+              properties:
+                api_key:
+                  type: string
+                  description: API key provided by Farrel Anshary
+                  example: asdasd
+                name:
+                  type: string
+                  description: Name of the menu
+                  example: Paket makan siang
+                description:
+                  type: string
+                  description: Description
+                  example: Menu ini adalah menu favorit semua orang, cocok untuk makan siang
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully create menu"
+                  data:
+                    type: object
+                    description: Returned data from server
+                    properties:
+                      menu:
+                        type: object
+                        description: Created menu data
+                        properties:
+                          id:
+                            type: integer
+                            description: ID represents a unique identifier of the menu
+                            example: 11
+                          name:
+                            type: string
+                            description: Name of the menu
+                            example: "Paket Nasi Goreng A"
+                          image:
+                            type: string
+                            description: Image of the menu (nullable)
+                            example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                          description:
+                            type: string
+                            description: Description of the menu
+                            example: "Ini enak lho..."
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+                    description: List of error fields
+                    properties:
+                      name:
+                        type: array
+                        description: List of errors in name field
+                        items:
+                          type: string
+                        example: [
+                          "The name field is required."
+                        ]
+                      description:
+                        type: array
+                        description: List of errors in description field
+                        items:
+                          type: string
+                        example: [
+                          "The description field is required."
+                        ]
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
+components:
+  schemas:
+    inline_response_401:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Love letter from server ❤️
+          example: Unauthorized
