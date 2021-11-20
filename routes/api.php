@@ -55,6 +55,7 @@ Route::group(["middleware" => "apiKey"], function () {
     Route::group(['prefix' => 'private', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'orders'], function () {
             Route::post('/', [OrderController::class, 'createOrder']);
+            Route::get('/', [OrderController::class, 'getAllOrders']);
             Route::get('/active', [OrderController::class, 'getActiveOrders']);
         });
 

@@ -41,6 +41,34 @@ class OrderController extends Controller
         );
     }
 
+    public function getAllOrders()
+    {
+        $user = Auth::user();
+        $orders = null;
+
+        if ($user->role == 1) {
+            $orders = Order::whereHas('schedule', function ($query) use ($user) {
+                $query->whereHas('menu', function ($query1) use ($user) {
+                    $query1->where('user_id', $user->id);
+                });
+            })
+            ->with('schedule.menu')
+            ->with('user')
+            ->get();
+        } else {
+            $orders = Order::where('user_id', $user->id)->with('schedule.menu.user')->get();
+        }
+
+        return ResponseHelper::response(
+            "Successfully get all orders",
+            200,
+            [
+                "total" => count($orders),
+                "orders" => $orders
+            ]
+        );
+    }
+
     public function createOrder(Request $request)
     {
         $request->validate([
