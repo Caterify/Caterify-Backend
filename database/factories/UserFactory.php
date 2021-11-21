@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -21,8 +22,7 @@ class UserFactory extends Factory
         $latitude = $this->faker->latitude(-6.38, -6.111);
         $longitude = $this->faker->longitude(106.489, 106.918);
         $kasihImageJangan = rand(0,1);
-        $image = $kasihImageJangan == 1 && $role == 1 ? $this->faker->image('storage/app/public/caterings') : null;
-        $image = $image ? explode('/', $image)[4] : null;
+        $image = $kasihImageJangan == 1 && $role == 1 ? $this->getImages() : null;
 
         return [
             'name' => $this->faker->name(),
@@ -39,6 +39,20 @@ class UserFactory extends Factory
             'latitude' => $latitude,
             'longitude' => $longitude,
         ];
+    }
+
+    public function getImages()
+    {
+        $imageName = rand(1, 6) . ".jpg";
+        $fullPath = resource_path("image/caterings/") .  $imageName;
+
+        $destinationPath = storage_path('app/public/caterings/') . $imageName;
+
+        if (!file_exists($destinationPath)) {
+            File::copy($fullPath, $destinationPath);
+        }
+
+        return $imageName;
     }
 
     /**

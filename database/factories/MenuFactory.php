@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 
 class MenuFactory extends Factory
 {
@@ -21,8 +22,8 @@ class MenuFactory extends Factory
         $count = count($users);
         $index = rand(0, $count - 1);
         $user = $users[$index];
-        $image = $this->faker->image('storage/app/public/menus');
-        $image = explode('/', $image)[4];
+        $kasihImageJangan = rand(0,1);
+        $image = $kasihImageJangan == 1 ? $this->getImages() : null;
 
         return [
             'name' => $this->getName($user->id),
@@ -30,6 +31,20 @@ class MenuFactory extends Factory
             'description' => $this->faker->realText(200),
             'user_id' => $user
         ];
+    }
+
+    public function getImages()
+    {
+        $imageName = rand(1, 9) . ".jpg";
+        $fullPath = resource_path("image/menus/") .  $imageName;
+
+        $destinationPath = storage_path('app/public/menus/') . $imageName;
+
+        if (!file_exists($destinationPath)) {
+            File::copy($fullPath, $destinationPath);
+        }
+
+        return $imageName;
     }
 
     private function getName($userId)
