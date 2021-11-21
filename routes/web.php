@@ -28,6 +28,22 @@ Route::get('/figma', function () {
     return redirect('https://www.figma.com/file/WognDOSpMbX1yTHgRgmU8u/Caterify?node-id=1%3A2');
 });
 
+Route::get('/farrel', function () {
+    return redirect('https://farrelanshary.me/');
+});
+
+Route::get('/joanda', function () {
+    return redirect('https://joanda.dev/');
+});
+
+Route::get('/putra', function () {
+    return redirect('https://hanifputra.com/');
+});
+
+Route::get('/rendio', function () {
+    return redirect('https://www.linkedin.com/in/meichelrendio/');
+});
+
 Route::get('/images/placeholder', function () {
     $path = resource_path('/image/placeholder.jpeg');
     if (file_exists($path)) {
