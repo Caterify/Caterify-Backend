@@ -684,6 +684,149 @@ paths:
               schema:
                 $ref: '#/components/schemas/inline_response_401'
 
+  '/api/private/schedules/':
+    post:
+      tags:
+        - Schedule
+      description: Create new schedule
+      summary: Create new schedule
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            format: bearer
+            example: Bearer 105Ua13XmskD3WS9MGFHy2IqMOqT6luSm09JBsSt3T
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - api_key
+                - date
+                - price
+                - menu_id
+              properties:
+                api_key:
+                  type: string
+                  description: API key provided by Farrel Anshary
+                  example: asdasd
+                date:
+                  type: string
+                  description: Date of the schedule
+                  format: date
+                  example: "2021-11-21"
+                price:
+                  type: number
+                  description: Price of the menu on that day
+                  example: 12000
+                menu_id:
+                  type: number
+                  description: Which menu to store
+                  example: 15
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "Successfully create orders"
+                  schedule:
+                    type: object
+                    description: Single schedule data
+                    properties:
+                      id:
+                        type: integer
+                        description: ID represents a unique identifier of the schedule
+                        example: 11
+                      date:
+                        type: string
+                        format: date
+                        description: Date of the schedule
+                        example: "2021-11-20"
+                      price:
+                        type: number
+                        description: Price of meal on that day
+                        example: 29000
+                      menu:
+                        type: object
+                        description: Menu on that day
+                        properties:
+                          id:
+                            type: integer
+                            description: ID represents a unique identifier of the menu
+                            example: 11
+                          name:
+                            type: string
+                            description: Name of the menu
+                            example: "Paket Nasi Goreng A"
+                          image:
+                            type: string
+                            description: Image of the menu (nullable)
+                            example: "59240f5242fa9312b4caf7a8d59f8ef7.png"
+                          description:
+                            type: string
+                            description: Description of the menu
+                            example: "Ini enak lho..."
+
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Love letter from server ❤️
+                    example: "The given data was invalid."
+                  errors:
+                    type: object
+                    description: List of error fields
+                    properties:
+                      date:
+                        type: array
+                        description: List of errors in date field
+                        items:
+                          type: string
+                        example: [
+                          "The date field is required.",
+                          "You already set menu for this day.",
+                          "The date must be a valid date"
+                        ]
+                      price:
+                        type: array
+                        description: List of errors in price field
+                        items:
+                          type: string
+                        example: [
+                          "The price field is required.",
+                          "The price must be a number."
+                        ]
+                      menu_id:
+                        type: array
+                        description: List of errors in menu_id field
+                        items:
+                          type: string
+                        example: [
+                          "The menu_id field is required.",
+                          "The menu_id must be a number."
+                        ]
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+
   '/api/public/schedules/catering/{cateringId}':
     get:
       tags:

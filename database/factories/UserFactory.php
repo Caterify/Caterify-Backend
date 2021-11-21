@@ -25,7 +25,7 @@ class UserFactory extends Factory
         $image = $kasihImageJangan == 1 && $role == 1 ? $this->getImages() : null;
 
         return [
-            'name' => $this->faker->name(),
+            'name' => $role == 1 ? $this->faker->firstName() . ' Catering' : $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'phone' => $this->faker->e164PhoneNumber(),

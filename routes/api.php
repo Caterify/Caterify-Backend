@@ -62,5 +62,9 @@ Route::group(["middleware" => "apiKey"], function () {
         Route::group(['prefix' => 'menus'], function () {
             Route::post('/', [MenuController::class, 'store']);
         });
+
+        Route::group(['prefix' => 'schedules'], function () {
+            Route::post('/', [ScheduleController::class, 'store']);
+        });
     });
 });

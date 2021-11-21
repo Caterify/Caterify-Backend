@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Models\Menu;
 use App\Models\Schedule;
 use App\Models\User;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
@@ -76,6 +79,57 @@ class ScheduleController extends Controller
                 'total_price' => $totalPrice,
                 'schedules' => $schedules
             ]
+        );
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'menu_id' => 'required|numeric',
+            'price' => 'required|numeric'
+        ]);
+
+        $date = $request->date;
+        $price = $request->price;
+        $menuId = $request->menu_id;
+        $catering = Auth::user();
+
+        $authorized = Menu::where('user_id', $catering->id)->findOrFail($menuId);
+
+        $exists = Schedule::where('date', $date)->whereHas('menu', function ($query) use ($catering) {
+            $query->where('user_id', $catering->id);
+        })->exists();
+
+        if ($exists) {
+            $responses = [
+                'message' => "The given data was invalid",
+                'errors' => [
+                    'date' => ["You already set menu for this day."]
+                ],
+            ];
+
+            return response()->json($responses, 422);
+        }
+
+        $schedule = new Schedule();
+        $schedule->date = $date;
+        $schedule->price = (int) $price;
+        $schedule->menu_id = $menuId;
+
+        if ($schedule->save()) {
+            $schedule->load(['menu']);
+
+            return ResponseHelper::response(
+                "Successfully create schedule",
+                201,
+                ['schedule' => $schedule]
+            );
+        }
+
+        return ResponseHelper::response(
+            "Something went wrong",
+            500
         );
     }
 }
