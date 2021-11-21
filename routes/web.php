@@ -44,6 +44,14 @@ Route::get('/rendio', function () {
     return redirect('https://www.linkedin.com/in/meichelrendio/');
 });
 
+Route::get('/ios', function () {
+    return redirect('https://github.com/Caterify/Caterify-iOS');
+});
+
+Route::get('/backend', function () {
+    return redirect('https://github.com/Caterify/Caterify-Backend');
+});
+
 Route::get('/images/placeholder', function () {
     $path = resource_path('/image/placeholder.jpeg');
     if (file_exists($path)) {
