@@ -17,14 +17,19 @@ class OrderSeeder extends Seeder
     public function run()
     {
         $users = User::where('role', 2)->get();
-        $today = Carbon::now();
+        $today = Carbon::now()->toDateString();
 
         foreach ($users as $user) {
             $catering = User::with('schedules')->where('role', 1)->inRandomOrder()->first();
 
             foreach ($catering->schedules as $schedule) {
                 $rating = $schedule->date < $today ? rand(1,5) : null;
-                $status = $schedule->date < $today ? 2 : 0;
+                $status = 1;
+                if ($schedule->date < $today) {
+                    $status = 0;
+                } else if ($schedule->date > $today) {
+                    $status = 2;
+                }
                 Order::create([
                     'schedule_id' => $schedule->id,
                     'user_id' => $user->id,
