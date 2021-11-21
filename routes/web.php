@@ -25,7 +25,7 @@ Route::get('/try', function () {
 });
 
 Route::get('/figma', function () {
-    return redirect('https://www.figma.com/file/WognDOSpMbX1yTHgRgmU8u/Caterify');
+    return redirect('https://www.figma.com/file/WognDOSpMbX1yTHgRgmU8u/Caterify?node-id=1%3A2');
 });
 
 Route::get('/images/placeholder', function () {
