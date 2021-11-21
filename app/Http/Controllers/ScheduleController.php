@@ -47,6 +47,27 @@ class ScheduleController extends Controller
         );
     }
 
+    public function getScheduleFromCateringSide(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date'
+        ]);
+
+        $catering = Auth::user();
+        $schedule = Schedule::with('menu')
+            ->whereHas('menu', function ($query) use ($catering) {
+                $query->where('user_id', $catering->id);
+            })
+            ->where('date', '=', $request->date)
+            ->first();
+
+        return ResponseHelper::response(
+            "Successfully get schedule of your catering on $request->date",
+            200,
+            ['schedule' => $schedule]
+        );
+    }
+
     public function getSchedulesFromDate($id, Request $request)
     {
         $request->validate([

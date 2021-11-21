@@ -65,6 +65,7 @@ Route::group(["middleware" => "apiKey"], function () {
 
         Route::group(['prefix' => 'schedules'], function () {
             Route::post('/', [ScheduleController::class, 'store']);
+            Route::get('/date', [ScheduleController::class, 'getScheduleFromCateringSide']);
         });
     });
 });
