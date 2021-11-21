@@ -103,6 +103,16 @@ class ScheduleController extends Controller
         );
     }
 
+    public function getSchedulesWithMenus()
+    {
+        $user = Auth::user();
+        $schedules = Schedule::with(['orders', 'menu'])->whereHas('menu', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->get();
+
+        return ResponseHelper::response("Successfully get all schedules", 200, ['schedules' => $schedules]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
