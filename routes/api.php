@@ -66,6 +66,7 @@ Route::group(["middleware" => "apiKey"], function () {
         Route::group(['prefix' => 'schedules'], function () {
             Route::post('/', [ScheduleController::class, 'store']);
             Route::get('/', [ScheduleController::class, 'getSchedulesWithMenus']);
+            Route::patch('/{scheduleId}/change-status', [ScheduleController::class, 'changeOrderStatus']);
             Route::get('/date', [ScheduleController::class, 'getScheduleFromCateringSide']);
         });
     });

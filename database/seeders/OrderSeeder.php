@@ -26,9 +26,9 @@ class OrderSeeder extends Seeder
                 $rating = $schedule->date < $today ? rand(1,5) : null;
                 $status = 1;
                 if ($schedule->date < $today) {
-                    $status = 0;
-                } else if ($schedule->date > $today) {
                     $status = 2;
+                } else if ($schedule->date > $today) {
+                    $status = 0;
                 }
                 Order::create([
                     'schedule_id' => $schedule->id,

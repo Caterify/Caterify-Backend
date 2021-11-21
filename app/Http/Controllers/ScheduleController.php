@@ -6,9 +6,11 @@ use App\Helpers\ResponseHelper;
 use App\Models\Menu;
 use App\Models\Schedule;
 use App\Models\User;
+use Exception;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
@@ -162,5 +164,36 @@ class ScheduleController extends Controller
             "Something went wrong",
             500
         );
+    }
+
+    public function changeOrderStatus($scheduleId, Request $request)
+    {
+        $request->validate([
+            'status' => 'required|numeric'
+        ]);
+
+        $status = $request->status;
+        $user = Auth::user();
+
+        $schedule = Schedule::with('orders')->whereHas('menu', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->findOrFail($scheduleId);
+
+        $result = DB::transaction(function () use ($schedule, $status) {
+            try {
+                foreach ($schedule->orders as $order) {
+                    $order->status = $status;
+                    $order->update();
+                }
+
+                $schedule->load(['orders']);
+
+                return ResponseHelper::response("Successfully update order status", 200, ['schedule' => $schedule]);
+            } catch (Exception $e) {
+                return ResponseHelper::response($e->getMessage(), 500);
+            }
+        });
+
+        return $result;
     }
 }
