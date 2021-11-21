@@ -34,12 +34,12 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'role' => $request->role,
+            'role' => (int) $request->role,
             'password' => Hash::make($request->password),
             'address' => $request->address,
-            'radius' => $request->radius,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+            'radius' => (double) $request->radius,
+            'latitude' => (double) $request->latitude,
+            'longitude' => (double) $request->longitude,
             'balance' => 0
         ]);
 
