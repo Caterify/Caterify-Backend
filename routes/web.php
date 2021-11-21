@@ -24,6 +24,10 @@ Route::get('/try', function () {
     return redirect('https://testflight.apple.com/join/3iYlzjcw');
 });
 
+Route::get('/figma', function () {
+    return redirect('https://www.figma.com/file/WognDOSpMbX1yTHgRgmU8u/Caterify');
+});
+
 Route::get('/images/placeholder', function () {
     $path = resource_path('/image/placeholder.jpeg');
     if (file_exists($path)) {
